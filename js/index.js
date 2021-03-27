@@ -1,106 +1,97 @@
 // Variables requiring node modules to be installed
-const fs = require("fs");
-const inquirer = require("inquirer");
-const util = require("util");
-const http = require('http');
-const PDFDocument = require('pdfkit');
+const inquirer = require('inquirer');
+const fs = require('fs');
 
-const hostname = '127.0.0.1';
-const port = 3000;
-
-// Require axios
-const axios = require("axios");
-
-// Code to generate server
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello World');
-});
-
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-});
-
-// User quesions array
-const questions = [{
-        type: "input",
-        name: "github",
-        message: "Enter your GitHub Username"
+inquirer
+  .prompt([
+    {
+      type: 'input',
+      message: 'What is the title of your README?',
+      name: 'title',
     },
     {
-        type: "input",
-        name: "email",
-        message: "Enter your e-mail address"
+      type: 'editor',
+      message: 'Give a short decscription of your project:',
+      name: 'description',
     },
     {
-        type: "input",
-        name: "repo",
-        message: "Enter the name of your GitHub repository"
+      type: 'editor',
+      message: 'Give the steps required to install your project:',
+      name: 'install',
     },
     {
-        type: "input",
-        name: "projectTitle",
-        message: "Enter the title of your project"
+      type: 'list',
+      message: 'Choose a license:',
+      choices: [
+        "No License",
+        "GNU GPLv3",
+        "MIT License"
+      ],
+      name: 'license',
+    },
+    {
+      type: "editor",
+      message: "Provide instructions and examples for use:",
+      name: "usage"
+    },
+    {
+      type: "editor",
+      message: "Enter instructions for making contributions:",
+      name: "contributions" 
+    },
+    {
+      type: "editor",
+      message: "Enter test instructions:",
+      name: "test" 
+    },
+    {
+      type: "input",
+      message: "Please enter your GitHub username:",
+      name: "github" 
+    },
+    {
+      type: "input",
+      message: "Please enter your email address:",
+      name: "email" 
+    },
+  ])
+  .then((responses) => {
+    
+    let licInfo = "This project does not have a license.";
+    let showLic = "None";
+    if(responses.license === "MIT License"){
+      licInfo = "This project uses a MIT License.";
+      showLic = "MIT";
+    }else if(responses.license === "GNU GPLv3"){
+      licInfo = "This project uses a GNU GPLv3 License.";
+      showLic = "GNU GPLv3";
     }
-];
 
-// Prompt user for questions using inquirer
-inquirer.prompt(questions).then(answers => {
-    // call getGitHubProfileInfo function
-    console.log(JSON.stringify(answers, null, '  '));
-    getGitHubProfileInfo(answers.github, answers.email, answers.repo, answers.projectTitle);
-
-});
-
-// Function for retrieving user GitHub Profile information based on their responses
-async function getGitHubProfileInfo(user, email, repo, title) {
-
-    // Use axios to make an API call to retrieve the user's GitHub information
-    const { data } = await axios.get(
-        `https://api.github.com/users/${user}`
-    );
-
-    data.email = email;
-
-    // Generate a URL for their GitHub profile based on the response
-    const repoURL = `https://github.com/${user}/${repo}`;
-
-    console.log("Data: ", data);
-    console.log("Reo URL: ", repoURL);
-    console.log("Project title: ", title);
-
-    // Turn the results into a string
-    const stringData = JSON.stringify(data, null, '  ');
-
-    // Variable containing code for readme template to be generated
-    const result = `
-# Title: ${title} 
-## Description 
-## Table of Contents
+    // Use ${responses.<name>} to access users answers
+    const infoDisplay = `# ${responses.title} ![License badge](https://img.shields.io/badge/license-${showLic}-blue.svg)
+${responses.description}
+## Table of Contents:
+1. [Installation](#installation)
+2. [Usage](#usage)
+3. [License](#license)
+4. [Contributing](#contributing)
+5. [Tests](#tests)
+6. [Questions](#questions)
 ## Installation
+${responses.install}
 ## Usage
+${responses.usage}
 ## License
+${licInfo}
 ## Contributing
+${responses.contributions}
 ## Tests
+${responses.test}
 ## Questions
-* User GitHub profile picture:
-![alt text](${data.avatar_url} "User GitHub Profile Picture")
-* User GitHub profile username: [${data.login}](${data.html_url})
-* User GitHub email: [${data.email}](mailto:${data.email})
-* User GitHub repository: ${repoURL}
-`;
-
-    // Log results
-    console.log(result);
-
-    // Write to a readme file
-    fs.writeFile("readmetemplate.md", result, function(err) {
-        if (err) return console.log(err);
-    });
-
-    console.log(data.avatar_url);
-
-    // Close server when complete
-    server.close();
-}
+GitHub: [${responses.github}](https://github.com/${responses.github})
+Additional questions? Email me at ${responses.email}
+    `;
+  fs.writeFile('README2.md', infoDisplay, (err) =>
+    err ? console.log(err) : console.log('Successfully created README!')
+    );   
+});
