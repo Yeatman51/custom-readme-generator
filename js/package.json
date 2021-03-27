@@ -1,0 +1,23 @@
+{
+  "name": "custom-readme",
+  "version": "1.0.0",
+  "description": "using the command line and Node.js to create a custom readme generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Yeatman51",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yeatman51/custom-readme-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Yeatman51/custom-readme-generator/issues"
+  },
+  "homepage": "https://github.com/Yeatman51/custom-readme-generator#readme",
+  "dependencies": {
+    "inquirer": "^8.0.0"
+  }
+}
