@@ -2,4 +2,6 @@
 
 https://github.com/Yeatman51
 
-![pro-screen-shot.png](assets/img/port-img/pro-screen-shot.png)
+![command-line-prompt.png](assets/command-line-prompt.png)
+
+![custom-readme-generator.png](assets/custom-readme-generator.png)
