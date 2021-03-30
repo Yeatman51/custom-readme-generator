@@ -12,3 +12,5 @@ I have created a command-line application that dynamically generates a professio
 When you were README file has been generated with your input through the Command line terminal there is also a table of contents on the final read me file. This table of contents is set up with links that will take you directly to the section that is selected.
 
 I've also included a .gitignore file.
+
+I hope that this updated read me generator can be useful for everyone in the future.
